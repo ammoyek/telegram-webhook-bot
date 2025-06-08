@@ -1,16 +1,8 @@
-from flask import Flask, request
-import requests
-import os
-
-app = Flask(__name__)
-
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHAT_ID = os.getenv("CHAT_ID")
-
 @app.route("/", methods=["POST"])
 def handle_webhook():
     data = request.json
-    message = data.get("message", "📡 Yeni sinyal geldi ancak mesaj içeriği boş.")
+    message = data.get("message", "❗Yeni sinyal geldi ancak mesaj içeriği boş.")
+    print("MESAJ:", message)
 
     telegram_url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     payload = {
@@ -18,5 +10,7 @@ def handle_webhook():
         "text": f"📬 TradingView Sinyali:\n\n{message}"
     }
 
-    requests.post(telegram_url, json=payload)
+    response = requests.post(telegram_url, json=payload)
+    print("TELEGRAM'A GÖNDERİLDİ:", response.status_code, response.text)
+
     return "OK", 200
