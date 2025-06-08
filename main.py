@@ -1,6 +1,6 @@
 from flask import Flask, request
-import os
 import requests
+import os
 
 app = Flask(__name__)
 
@@ -8,23 +8,15 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
 @app.route("/", methods=["POST"])
-def webhook():
+def handle_webhook():
     data = request.json
-    message = data.get("message", "No message received.")
-    if BOT_TOKEN and CHAT_ID:
-        url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-        payload = {
-            "chat_id": CHAT_ID,
-            "text": f"{message}"
-        }
-        requests.post(url, json=payload)
-        return "OK", 200
-    else:
-        return "Missing environment variables", 400
+    message = data.get("message", "📡 Yeni sinyal geldi ancak mesaj içeriği boş.")
 
-@app.route("/", methods=["GET"])
-def home():
-    return "Webhook is running.", 200
+    telegram_url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    payload = {
+        "chat_id": CHAT_ID,
+        "text": f"📬 TradingView Sinyali:\n\n{message}"
+    }
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    requests.post(telegram_url, json=payload)
+    return "OK", 200

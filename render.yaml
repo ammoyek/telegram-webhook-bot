@@ -2,13 +2,11 @@ services:
   - type: web
     name: telegram-webhook-bot
     env: python
-    repo: https://github.com/ammoyek/telegram-webhook-bot
-    branch: main
-    buildCommand: ""
-    startCommand: python main.py
     plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn main:app --bind 0.0.0.0:$PORT
     envVars:
-      - key: TELEGRAM_TOKEN
-        value: senin_bot_tokenin
+      - key: BOT_TOKEN
+        value: "8138103593:AAGXULM2s5JGiQYhXWCd_7ejW4j6iocbw54"
       - key: CHAT_ID
-        value: senin_chat_idn
+        value: "5573666747"
